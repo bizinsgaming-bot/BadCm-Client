@@ -1,3 +1,4 @@
+
 package com.raspberry.client.settings.types;
 
 import com.raspberry.client.settings.Setting;
@@ -20,12 +21,12 @@ public class NumberSetting extends Setting {
         this.increment = increment;
     }
 
-    public double getValue() {
+    @Override
+    public Object getValue() {
         return value;
     }
 
     public void setValue(double value) {
-        // Clamp value to min/max
         this.value = Math.max(min, Math.min(max, value));
     }
 
