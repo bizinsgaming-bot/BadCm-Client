@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         jcenter()
@@ -18,6 +19,7 @@ group = "com.raspberry.client"
 archivesBaseName = "Raspberry-Client"
 
 sourceCompatibility = targetCompatibility = '1.8'
+
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
@@ -25,9 +27,7 @@ compileJava {
 minecraft {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
-
     mappings = "stable_22"
-
     makeObfSourceJar = false
 
     clientRunArgs += '--tweakClass org.spongepowered.asm.launch.MixinTweaker'
@@ -58,8 +58,7 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -70,6 +69,8 @@ processResources {
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     manifest {
         attributes(
             'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
@@ -82,7 +83,9 @@ jar {
         )
     }
 
-    configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }.each {
+    configurations.compile.collect {
+        it.isDirectory() ? it : zipTree(it)
+    }.each {
         from(it) {
             exclude "META-INF/*.SF"
             exclude "META-INF/*.DSA"
