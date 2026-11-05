@@ -43,7 +43,7 @@ public class ZoomModule extends Module {
 
             if (isKeyDown) {
                 // Apply zoom
-                float targetZoom = (float) (previousFOV / zoomLevel.getValue());
+                float targetZoom = previousFOV / ((Number) zoomLevel.getValue()).floatValue();
 
                 if (smoothZoom.isEnabled()) {
                     // Smooth transition
