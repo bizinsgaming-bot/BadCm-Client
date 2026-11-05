@@ -1,0 +1,42 @@
+
+name: Build BadCm Client
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '3.1'
+
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper --gradle-version 3.1
+
+      - name: Setup Minecraft
+        run: ./gradlew setupDecompWorkspace --refresh-dependencies
+
+      - name: Build Client
+        run: ./gradlew clean build
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: BadCm-Client
+          path: build/libs/*.jar
