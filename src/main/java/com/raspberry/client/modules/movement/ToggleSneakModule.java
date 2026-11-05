@@ -1,3 +1,4 @@
+
 package com.raspberry.client.modules.movement;
 
 import com.raspberry.client.events.EventTarget;
@@ -5,11 +6,8 @@ import com.raspberry.client.events.types.EventUpdate;
 import com.raspberry.client.modules.Category;
 import com.raspberry.client.modules.Module;
 import org.lwjgl.input.Keyboard;
+import net.minecraft.client.settings.KeyBinding;
 
-/**
- * Toggle Sneak module.
- * Toggles sneaking on/off instead of requiring holding the key.
- */
 public class ToggleSneakModule extends Module {
 
     private boolean sneaking = false;
@@ -22,27 +20,33 @@ public class ToggleSneakModule extends Module {
     @EventTarget
     public void onUpdate(EventUpdate event) {
         if (event.isPre() && mc.thePlayer != null) {
-            boolean isKeyDown = Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode());
 
-            // Toggle on key press
+            int keyCode = mc.gameSettings.keyBindSneak.getKeyCode();
+
+            boolean isKeyDown = Keyboard.isKeyDown(keyCode);
+
             if (isKeyDown && !wasKeyDown) {
                 sneaking = !sneaking;
             }
 
             wasKeyDown = isKeyDown;
 
-            // Apply sneaking state
-            mc.gameSettings.keyBindSneak.pressed = sneaking;
+            KeyBinding.setKeyBindState(keyCode, sneaking);
         }
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
-        // Reset sneaking when module is disabled
+
         sneaking = false;
+        wasKeyDown = false;
+
         if (mc.gameSettings != null) {
-            mc.gameSettings.keyBindSneak.pressed = false;
+            KeyBinding.setKeyBindState(
+                mc.gameSettings.keyBindSneak.getKeyCode(),
+                false
+            );
         }
     }
 }
